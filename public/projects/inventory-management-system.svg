@@ -1,0 +1,11 @@
+<!-- Replace this placeholder with a real Inventory Management System screenshot when available. -->
+<svg width="1200" height="750" viewBox="0 0 1200 750" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="750" fill="#050711"/>
+  <rect x="70" y="70" width="1060" height="610" rx="28" fill="#08111F" stroke="#1E3A5F"/>
+  <rect x="125" y="130" width="230" height="470" rx="18" fill="#0D1728" stroke="#244866"/>
+  <rect x="410" y="130" width="665" height="105" rx="18" fill="#0D1728" stroke="#244866"/>
+  <rect x="410" y="280" width="665" height="320" rx="18" fill="#0D1728" stroke="#244866"/>
+  <path d="M465 515H1020M465 445H1020M465 375H1020" stroke="#1E3A5F" stroke-width="5"/>
+  <text x="125" y="185" fill="#E5EDF7" font-family="Inter, Arial" font-size="34" font-weight="700">Inventory</text>
+  <text x="455" y="195" fill="#7DD3FC" font-family="Inter, Arial" font-size="30" font-weight="700">Warehouse dashboard</text>
+</svg>

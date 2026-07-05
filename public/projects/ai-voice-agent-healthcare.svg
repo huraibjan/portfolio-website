@@ -1,0 +1,11 @@
+<!-- Replace this placeholder with a real Healthcare Voice AI screenshot when available. -->
+<svg width="1200" height="750" viewBox="0 0 1200 750" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="750" fill="#050711"/>
+  <rect x="72" y="72" width="1056" height="606" rx="30" fill="#08111F" stroke="#1E3A5F"/>
+  <circle cx="600" cy="360" r="120" fill="#38BDF8" opacity=".16"/>
+  <path d="M420 360C470 260 548 260 600 360C652 460 730 460 780 360" stroke="#2DD4BF" stroke-width="12" stroke-linecap="round"/>
+  <rect x="145" y="145" width="320" height="85" rx="16" fill="#0F1E33"/>
+  <rect x="735" y="490" width="320" height="85" rx="16" fill="#0F1E33"/>
+  <text x="145" y="200" fill="#E5EDF7" font-family="Inter, Arial" font-size="35" font-weight="700">Healthcare Voice AI</text>
+  <text x="145" y="610" fill="#7DD3FC" font-family="Inter, Arial" font-size="28" font-weight="700">Appointments · intake · routing</text>
+</svg>

@@ -1,0 +1,14 @@
+<!-- Replace this placeholder with a real Quantixx AI screenshot when available. -->
+<svg width="1200" height="750" viewBox="0 0 1200 750" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="750" fill="#050711"/>
+  <rect x="82" y="82" width="1036" height="586" rx="30" fill="#08111F" stroke="#332F66"/>
+  <circle cx="600" cy="365" r="92" fill="#8B5CF6" opacity=".25"/>
+  <circle cx="600" cy="365" r="46" fill="#38BDF8" opacity=".65"/>
+  <path d="M600 365L360 210M600 365L840 210M600 365L365 535M600 365L850 535" stroke="#7DD3FC" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="360" cy="210" r="42" fill="#111C30" stroke="#38BDF8"/>
+  <circle cx="840" cy="210" r="42" fill="#111C30" stroke="#8B5CF6"/>
+  <circle cx="365" cy="535" r="42" fill="#111C30" stroke="#2DD4BF"/>
+  <circle cx="850" cy="535" r="42" fill="#111C30" stroke="#38BDF8"/>
+  <text x="120" y="150" fill="#E5EDF7" font-family="Inter, Arial" font-size="40" font-weight="700">Quantixx AI</text>
+  <text x="120" y="620" fill="#C4B5FD" font-family="Inter, Arial" font-size="28" font-weight="700">Agents · workflows · business automation</text>
+</svg>

@@ -1,0 +1,15 @@
+<!-- Replace this placeholder with a real VulnTriage screenshot when available. -->
+<svg width="1200" height="750" viewBox="0 0 1200 750" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="750" fill="#050711"/>
+  <rect x="70" y="70" width="1060" height="610" rx="26" fill="#08111F" stroke="#223B57"/>
+  <rect x="120" y="125" width="960" height="86" rx="16" fill="#101C2E"/>
+  <rect x="120" y="250" width="280" height="330" rx="18" fill="#0D1728" stroke="#244866"/>
+  <rect x="440" y="250" width="640" height="330" rx="18" fill="#0D1728" stroke="#244866"/>
+  <path d="M500 510L610 380L730 430L850 295L1010 360" stroke="#2DD4BF" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="610" cy="380" r="14" fill="#38BDF8"/>
+  <circle cx="850" cy="295" r="14" fill="#8B5CF6"/>
+  <text x="120" y="180" fill="#E5EDF7" font-family="Inter, Arial" font-size="38" font-weight="700">VulnTriage</text>
+  <text x="145" y="325" fill="#7DD3FC" font-family="Inter, Arial" font-size="24" font-weight="700">CVE Intelligence</text>
+  <text x="145" y="372" fill="#CBD5E1" font-family="Inter, Arial" font-size="20">Exploitability</text>
+  <text x="145" y="420" fill="#CBD5E1" font-family="Inter, Arial" font-size="20">RAG analysis</text>
+</svg>

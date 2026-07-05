@@ -1,0 +1,10 @@
+<!-- Replace this placeholder with a real Emergency SOS Mobile App screenshot when available. -->
+<svg width="1200" height="750" viewBox="0 0 1200 750" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="750" fill="#050711"/>
+  <rect x="438" y="82" width="324" height="586" rx="42" fill="#08111F" stroke="#334155" stroke-width="4"/>
+  <circle cx="600" cy="375" r="118" fill="#EF4444" opacity=".25"/>
+  <circle cx="600" cy="375" r="82" fill="#B91C1C"/>
+  <text x="552" y="393" fill="#FFFFFF" font-family="Inter, Arial" font-size="38" font-weight="800">SOS</text>
+  <path d="M280 210C390 125 505 125 600 190C705 120 825 130 930 215" stroke="#38BDF8" stroke-width="7" stroke-linecap="round" opacity=".75"/>
+  <text x="368" y="710" fill="#7DD3FC" font-family="Inter, Arial" font-size="28" font-weight="700">GPS · SMS · offline emergency flow</text>
+</svg>
