@@ -270,10 +270,9 @@ function Preloader() {
 }
 
 // ─── Navbar ───────────────────────────────────────────────────────────────────
-function Navbar() {
+function Navbar({ onResumeOpen }: { onResumeOpen: () => void }) {
   const [showControls, setShowControls] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [resumeOpen, setResumeOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -379,7 +378,7 @@ function Navbar() {
               {/* Resume entry */}
               <div className="overflow-hidden">
                 <motion.button
-                  onClick={() => { setMenuOpen(false); setResumeOpen(true); }}
+                  onClick={() => { setMenuOpen(false); onResumeOpen(); }}
                   className="relative group inline-block font-display font-black text-6xl md:text-8xl lg:text-[7rem] tracking-tighter text-accent uppercase leading-[0.88]"
                   initial={{ y: "100%" }}
                   animate={{ y: 0 }}
@@ -405,18 +404,12 @@ function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Resume modal */}
-      <AnimatePresence>
-        {resumeOpen && (
-          <ResumeModal key="resume-modal" onClose={() => setResumeOpen(false)} />
-        )}
-      </AnimatePresence>
     </>
   );
 }
 
 // ─── Hero Section ─────────────────────────────────────────────────────────────
-function HeroSection() {
+function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
   const [nameFontSize, setNameFontSize] = useState("20vw");
   const { scrollY } = useScroll();
   const yParallax = useTransform(scrollY, [0, 2000], [0, -1000]);
@@ -514,14 +507,12 @@ function HeroSection() {
               >
                 GitHub ↗
               </a>
-              <a
-                href="/Resume-HuraibJan.pdf"
-                target="_blank"
-                rel="noreferrer"
+              <button
+                onClick={onResumeOpen}
                 className="font-mono text-xs tracking-widest uppercase font-bold px-4 py-1.5 rounded-full bg-dark text-accent border border-dark hover:bg-accent hover:text-dark transition-colors"
               >
                 Resume ↗
-              </a>
+              </button>
             </div>
           </motion.div>
         </div>
@@ -608,6 +599,29 @@ function BrowserFrame({
 }
 
 // ─── Resume Modal ─────────────────────────────────────────────────────────────
+const RESUME_SKILLS = [
+  {
+    category: "AI & Machine Learning",
+    tags: ["Python", "PyTorch", "TensorFlow", "Scikit-learn", "XGBoost", "BERT", "LangChain", "RAG Pipelines", "NLP", "Multi-Agent", "Vapi AI", "OpenAI API", "Qdrant", "Embeddings", "Deep Learning"],
+    accent: true,
+  },
+  {
+    category: "Full-Stack & Cloud",
+    tags: ["React.js", "Next.js", "Node.js", "Django", "FastAPI", "PostgreSQL", "MongoDB", "Redis", "Docker", "AWS", "GCP", "TypeScript", "REST APIs", "Microservices"],
+    accent: false,
+  },
+  {
+    category: "Mobile & Product",
+    tags: ["Flutter", "iOS", "Android", "Firebase", "Kotlin", "Java", "App Store"],
+    accent: false,
+  },
+  {
+    category: "Data & Analytics",
+    tags: ["Apache Spark", "ETL Pipelines", "Tableau", "Power BI", "Plotly", "Seaborn", "EDA", "SQL", "Statistical Analysis"],
+    accent: false,
+  },
+];
+
 function ResumeModal({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     const esc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -635,9 +649,10 @@ function ResumeModal({ onClose }: { onClose: () => void }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 16 }}
         transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Top bar */}
-        <div className="flex items-center justify-between px-5 py-3.5 bg-[#0a0a0a] border-b border-white/8 flex-shrink-0">
+        <div className="flex items-center justify-between px-5 py-3.5 bg-[#0a0a0a] border-b border-white/[0.08] flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">
               <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
@@ -659,7 +674,7 @@ function ResumeModal({ onClose }: { onClose: () => void }) {
             </a>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-white/8 hover:bg-white/15 border border-white/10 flex items-center justify-center transition-colors ml-1"
+              className="w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/15 border border-white/10 flex items-center justify-center transition-colors ml-1"
               aria-label="Close"
             >
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -669,18 +684,133 @@ function ResumeModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        {/* PDF viewer */}
-        <div className="flex-1 bg-[#1a1a1a] relative">
-          <iframe
-            src="/Resume-HuraibJan.pdf"
-            className="w-full h-full"
-            style={{ border: "none" }}
-            title="Huraib Jan Resume"
-          />
+        {/* Resume content */}
+        <div className="flex-1 overflow-y-auto bg-[#0f0f0f]">
+          <div className="max-w-[900px] mx-auto px-6 md:px-10 py-10 md:py-14">
+
+            {/* Header */}
+            <div className="mb-10 pb-8 border-b border-white/[0.08]">
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                <div>
+                  <h1 className="font-display font-black text-4xl md:text-5xl text-white tracking-tighter leading-none mb-2">
+                    HURAIB JAN
+                  </h1>
+                  <p className="font-mono text-sm text-accent tracking-widest uppercase">AI Systems Engineer</p>
+                </div>
+                <div className="flex flex-col gap-1.5 sm:items-end">
+                  <a href="mailto:huraibjansarhandi@gmail.com" className="font-mono text-[11px] text-white/50 hover:text-accent transition-colors tracking-wide">
+                    huraibjansarhandi@gmail.com
+                  </a>
+                  <span className="font-mono text-[11px] text-white/40 tracking-wide">Montclair, NJ, USA</span>
+                  <div className="flex gap-3">
+                    <a href="https://github.com/huraibjan" target="_blank" rel="noreferrer" className="font-mono text-[11px] text-white/40 hover:text-accent transition-colors tracking-wide">
+                      github.com/huraibjan
+                    </a>
+                    <a href="https://linkedin.com/in/huraibjan" target="_blank" rel="noreferrer" className="font-mono text-[11px] text-white/40 hover:text-accent transition-colors tracking-wide">
+                      linkedin.com/in/huraibjan
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10 lg:gap-12 items-start">
+
+              {/* Left: Experience + Education */}
+              <div className="space-y-10">
+
+                {/* Experience */}
+                <div>
+                  <h2 className="font-mono text-[10px] tracking-[0.2em] uppercase text-accent mb-6">Experience</h2>
+                  <div className="space-y-8">
+                    {EXPERIENCE.map((exp, i) => (
+                      <div key={i} className="relative pl-4 border-l border-white/[0.08] hover:border-accent/50 transition-colors group">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 mb-2">
+                          <div>
+                            <h3 className="font-display font-bold text-white text-base leading-tight">{exp.role}</h3>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="font-mono text-xs text-accent/80 font-bold">{exp.company}</span>
+                              <span className="font-mono text-[10px] text-white/30 border border-white/[0.1] rounded-full px-2 py-0.5">{exp.type}</span>
+                            </div>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <span className="font-mono text-[10px] text-white/40 block">{exp.period}</span>
+                            <span className="font-mono text-[10px] text-white/25 block">{exp.location}</span>
+                          </div>
+                        </div>
+                        <p className="text-white/50 text-[13px] leading-relaxed mb-3">{exp.description}</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {exp.highlights.map((tag) => (
+                            <span key={tag} className="font-mono text-[10px] px-2 py-0.5 rounded-full bg-white/[0.06] text-white/50 group-hover:bg-accent/10 group-hover:text-accent/70 transition-colors border border-white/[0.06]">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Education */}
+                <div>
+                  <h2 className="font-mono text-[10px] tracking-[0.2em] uppercase text-accent mb-6">Education</h2>
+                  <div className="space-y-6">
+                    {EDUCATION.map((edu, i) => (
+                      <div key={i} className="relative pl-4 border-l border-white/[0.08] hover:border-accent/50 transition-colors group">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 mb-2">
+                          <div>
+                            <h3 className="font-display font-bold text-white text-base leading-tight">{edu.degree}</h3>
+                            <span className="font-mono text-xs text-accent/80 font-bold">{edu.school}</span>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <span className="font-mono text-[10px] text-white/40 block">{edu.period}</span>
+                            <span className="font-mono text-[10px] text-white/25 block">{edu.location}</span>
+                            <span className="font-mono text-[10px] text-accent/60 block">GPA {edu.gpa}</span>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {edu.courses.map((c) => (
+                            <span key={c} className="font-mono text-[10px] px-2 py-0.5 rounded-full bg-white/[0.06] text-white/40 border border-white/[0.06]">
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Skills */}
+              <div className="space-y-7 lg:pt-0">
+                <h2 className="font-mono text-[10px] tracking-[0.2em] uppercase text-accent mb-6">Skills</h2>
+                {RESUME_SKILLS.map((group) => (
+                  <div key={group.category}>
+                    <span className="font-mono text-[9px] tracking-widest uppercase text-white/30 block mb-2">{group.category}</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {group.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className={`font-mono text-[10px] px-2.5 py-1 rounded-full border transition-colors ${
+                            group.accent
+                              ? "bg-accent/10 text-accent/80 border-accent/20"
+                              : "bg-white/[0.05] text-white/45 border-white/[0.08]"
+                          }`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          </div>
         </div>
 
-        {/* Bottom hint */}
-        <div className="bg-[#0a0a0a] px-5 py-2 border-t border-white/8 flex-shrink-0 flex items-center justify-between">
+        {/* Bottom bar */}
+        <div className="bg-[#0a0a0a] px-5 py-2.5 border-t border-white/[0.08] flex-shrink-0 flex items-center justify-between">
           <span className="font-mono text-[9px] uppercase tracking-widest text-white/20">Press ESC to close</span>
           <a
             href="/Resume-HuraibJan.pdf"
@@ -689,7 +819,7 @@ function ResumeModal({ onClose }: { onClose: () => void }) {
             className="font-mono text-[9px] uppercase tracking-widest text-white/30 hover:text-accent transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
-            Open in new tab ↗
+            Open PDF ↗
           </a>
         </div>
       </motion.div>
@@ -1626,6 +1756,7 @@ export function PortfolioHome() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [selectedProject, setSelectedProject] = useState<{ project: Project; index: number } | null>(null);
+  const [resumeOpen, setResumeOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -1652,10 +1783,16 @@ export function PortfolioHome() {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {resumeOpen && (
+          <ResumeModal key="resume-modal" onClose={() => setResumeOpen(false)} />
+        )}
+      </AnimatePresence>
+
       <div className="min-h-screen bg-dark text-dark selection:bg-accent selection:text-dark">
-        <Navbar />
+        <Navbar onResumeOpen={() => setResumeOpen(true)} />
         <main className="relative z-10 bg-light rounded-b-[48px] md:rounded-b-[80px] shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
-          <HeroSection />
+          <HeroSection onResumeOpen={() => setResumeOpen(true)} />
           <WorkSection
             onSelectProject={(p) =>
               setSelectedProject({ project: p, index: projects.indexOf(p) })
