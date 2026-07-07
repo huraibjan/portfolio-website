@@ -22,10 +22,10 @@ export const projects: Project[] = [
     name: "Kallin AI",
     category: "Voice Agent Automation / Restaurant Operations",
     description:
-      "AI-powered restaurant voice ordering and operations platform with mobile app, dashboard, menu workflows, notifications, order handling, and automated call workflows.",
+      "AI-powered restaurant voice ordering and operations platform with mobile app, dashboard, menu workflows, notifications, order handling, Redis-backed workflow state, and automated call flows.",
     role:
-      "AI system architecture, backend workflows, mobile app flow, dashboard logic, voice agent automation, restaurant operations, product execution.",
-    tech: ["Flutter", "FastAPI", "Voice Agent Automation", "Scheduling", "MySQL", "REST APIs", "Push Notifications", "Dashboard UI"],
+      "AI system architecture, backend workflows, Redis caching and workflow state, mobile app flow, dashboard logic, voice agent automation, restaurant operations, product execution.",
+    tech: ["Flutter", "FastAPI", "Voice Agent Automation", "Scheduling", "Redis", "MySQL", "REST APIs", "Push Notifications", "Dashboard UI"],
     links: [
       { label: "Website", href: "https://kallin.ai/" },
       { label: "Dashboard", href: "https://dashboard.kallin.ai/" },

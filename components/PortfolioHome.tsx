@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
   motion,
   AnimatePresence,
@@ -20,14 +20,14 @@ import { WarpBackground } from "@/components/ui/warp-background";
 
 // ─── Mobile detection hook ────────────────────────────────────────────────────
 function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
+  const [is, setIs] = useState(false);
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1024);
+    const check = () => setIs(window.innerWidth < 1024);
     check();
     window.addEventListener("resize", check, { passive: true });
     return () => window.removeEventListener("resize", check);
   }, []);
-  return isMobile;
+  return is;
 }
 
 // ─── Terminal typing animation data ───────────────────────────────────────────
@@ -181,7 +181,7 @@ const SERVICES = [
 ];
 
 const NAV_LINKS = [
-  { label: "WORK", href: "#work-section" },
+  { label: "PROJECTS", href: "#work-section" },
   { label: "ABOUT", href: "#about-section" },
   { label: "EXPERIENCE", href: "#experience-section" },
   { label: "SERVICES", href: "#services-section" },
@@ -466,6 +466,7 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
   const [nameFontSize, setNameFontSize] = useState("20vw");
   const isMobile = useIsMobile();
   const prefersReduced = useReducedMotion();
+  const disableAnimation = isMobile || !!prefersReduced;
 
   // Terminal typing animation (starts after preloader finishes at ~2000ms)
   const [termPhase, setTermPhase] = useState(0); // 0=idle 1=typing-cmd 2=badge 3=heading 4=typing-body 5=done
@@ -499,7 +500,7 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
                     clearInterval(iv);
                     setTermPhase(5);
                   }
-                }, 16);
+                }, 10);
               }, 100);
             }, 80);
           }, 150);
@@ -511,9 +512,8 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
   }, []);
 
   const { scrollY } = useScroll();
-  // Disable parallax on mobile — scroll listeners are expensive on low-end devices
-  const yParallaxRaw = useTransform(scrollY, [0, 2000], [0, -1000]);
-  const yParallax = isMobile ? 0 : yParallaxRaw;
+  const yParallaxFull = useTransform(scrollY, [0, 2000], [0, -1000]);
+  const yParallax = isMobile ? 0 : yParallaxFull;
 
   useEffect(() => {
     const calc = () => {
@@ -539,10 +539,12 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
   };
 
   return (
-    <div className="h-screen w-full relative z-0">
+    /* On mobile: normal flow so sections below sit on top of hero naturally.
+       On desktop: fixed behind content so sections scroll over it. */
+    <div className={isMobile ? "w-full relative z-10 bg-light" : "h-screen w-full relative z-0"}>
       <motion.section
         id="hero-section"
-        className={`fixed top-0 left-0 w-full min-h-screen flex flex-col justify-between bg-light pt-24 md:pt-32 pb-12 overflow-hidden z-0${isMobile ? "" : " will-change-transform"}`}
+        className={`w-full min-h-screen flex flex-col justify-between bg-light pt-24 md:pt-32 pb-12 overflow-hidden ${isMobile ? "relative z-10" : "fixed top-0 left-0 z-0 will-change-transform"}`}
         style={{ y: yParallax }}
       >
         {!isMobile && <TechBackground />}
@@ -707,21 +709,17 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
               <motion.span
                 key={i}
                 className="font-display font-black text-accent tracking-tighter inline-block"
-                style={{ transformOrigin: "50% 100%", willChange: isMobile ? "auto" : "transform" }}
-                animate={
-                  isMobile || prefersReduced
-                    ? {}
-                    : {
-                        y:       [0, -20, 0, -10, 0],
-                        rotateX: [0,  8,  0,   4, 0],
-                        rotateZ: [0,  1.5, 0, -1, 0],
-                        scaleY:  [1, 1.04, 1, 1.02, 1],
-                      }
-                }
+                style={{ transformOrigin: "50% 100%", willChange: disableAnimation ? "auto" : "transform" }}
+                animate={disableAnimation ? {} : {
+                  y:       [0, -20, 0, -10, 0],
+                  rotateX: [0,  8,  0,   4, 0],
+                  rotateZ: [0,  1.5, 0, -1, 0],
+                  scaleY:  [1, 1.04, 1, 1.02, 1],
+                }}
                 transition={{
                   duration: 3.2,
                   delay: i * 0.1,
-                  repeat: isMobile || prefersReduced ? 0 : 2,
+                  repeat: disableAnimation ? 0 : 2,
                   repeatDelay: 5,
                   ease: [0.25, 0.46, 0.45, 0.94],
                 }}
@@ -1428,22 +1426,23 @@ function ProjectCard({
         width: "100%",
         overflow: "hidden",
         willChange: "transform",
-        backgroundColor: "transparent",
+        // First card covers the hero edges; others are transparent so previous cards show
+        backgroundColor: i === 0 ? "#F2F2F2" : "transparent",
       }}
-      className="flex items-center justify-center rounded-[32px] md:rounded-[48px]"
+      className="flex items-center justify-center p-2 md:p-4"
     >
       <motion.div
         style={{ scale, backgroundColor: colors.bg, color: colors.text }}
-        className="relative flex flex-col lg:flex-row w-full h-full rounded-[32px] md:rounded-[48px] overflow-hidden px-8 md:px-12 lg:px-20 pt-16 md:pt-20 lg:pt-36 pb-8 md:pb-16"
+        className="relative flex flex-col lg:flex-row w-full h-full rounded-[32px] md:rounded-[48px] overflow-hidden px-8 md:px-16 lg:px-20 pt-28 md:pt-36 pb-8 md:pb-16"
       >
         {/* Left column */}
-        <div className="flex flex-col w-full lg:w-5/12 lg:h-full lg:justify-between gap-6 lg:gap-0 z-10">
+        <div className="flex flex-col w-full lg:w-5/12 gap-8 lg:gap-0 lg:h-full lg:justify-between z-10">
           <div>
             <span
-              className="font-mono text-xs md:text-sm tracking-widest uppercase font-semibold block mb-4 lg:mb-8"
+              className="font-mono text-xs md:text-sm tracking-widest uppercase font-semibold block mb-4 md:mb-8"
               style={{ color: colors.label }}
             >
-              (WORK)
+              (PROJECTS)
             </span>
             <h2
               className="font-display font-black tracking-tighter leading-[0.9] break-words"
@@ -1453,7 +1452,7 @@ function ProjectCard({
             </h2>
           </div>
 
-          <div className="flex flex-col gap-4 lg:gap-24">
+          <div className="flex flex-col gap-6 lg:gap-24">
             <div className="flex items-center justify-between w-full lg:w-4/5">
               <div className="w-8 h-8 rotate-45 ml-1 shrink-0" style={{ backgroundColor: colors.text }} />
               <button
@@ -1532,7 +1531,7 @@ function ProjectCard({
 // ─── Work Section ─────────────────────────────────────────────────────────────
 function WorkSection({ onSelectProject }: { onSelectProject: (p: Project) => void }) {
   return (
-    <section id="work-section" className="w-full bg-transparent relative z-10">
+    <section id="work-section" className="w-full bg-light relative z-10">
       <div className="w-full flex flex-col items-center relative">
         {projects.map((project, i) => (
           <ProjectCard
