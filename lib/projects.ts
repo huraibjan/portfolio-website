@@ -200,15 +200,21 @@ export const projects: Project[] = [
     impact: ["Video CV reels", "Recruiter review flow", "Candidate screening"],
   },
   {
-    slug: "ai-voice-agent-healthcare",
+    slug: "medical-receptionist",
     name: "Medical Receptionist",
     category: "Healthcare Voice Agent Automation",
     description:
-      "AI-powered voice agent acting as a 24/7 medical receptionist — handling inbound patient calls, appointment scheduling, intake triage, and call routing without human intervention.",
-    role: "Voice agent architecture, conversation flow design, appointment scheduling logic, patient intake automation, LLM prompt engineering, and call routing workflows.",
-    tech: ["Voice Agent Automation", "LLM Workflows", "Scheduling", "Patient Intake", "Call Routing", "Twilio"],
-    image: "/projects/ai-voice-agent-healthcare.svg",
-    impact: ["24/7 patient call handling", "Automated appointment booking", "Intake triage & routing"],
+      "AI-powered voice agent backend that acts as a 24/7 medical receptionist. It connects a Retell AI voice assistant to a FastAPI backend so incoming patient calls are triaged automatically, summarized into structured data, and escalated to clinic staff through urgency-based email notifications — reducing response delays and routing emergencies to the right people fast.",
+    role: "Backend architecture, event-driven webhook processing, Retell AI voice-agent integration, urgency classification logic, structured patient-data extraction, email notification system, and secure signature-verified webhook handling.",
+    tech: ["Python", "FastAPI", "Retell AI", "Uvicorn", "Pydantic", "Jinja2", "HTTPX", "SendGrid / SMTP", "Webhooks"],
+    links: [{ label: "GitHub", href: "https://github.com/huraibjan/medical-receptionist" }],
+    image: "/projects/medical-receptionist.svg",
+    impact: [
+      "Real-time Retell AI webhook processing",
+      "Automatic call-urgency classification (emergency / urgent / routine)",
+      "Structured patient intake extraction (name, DOB, callback, insurance, reason)",
+      "Tailored email escalation to clinic staff",
+    ],
   },
   {
     slug: "e-commerce-flower-shop",

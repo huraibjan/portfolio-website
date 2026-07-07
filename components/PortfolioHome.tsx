@@ -1157,7 +1157,7 @@ function ProjectModal({ project, index, onClose }: { project: Project; index: nu
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/8 hover:bg-white/16 border border-white/12 flex items-center justify-center transition-colors"
+          className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm hover:bg-white/16 border border-white/12 flex items-center justify-center transition-colors"
           aria-label="Close"
         >
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
