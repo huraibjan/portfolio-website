@@ -90,7 +90,7 @@ const EXPERIENCE = [
     impact: "Grew from full-stack delivery into data engineering ownership: shipped dashboards, cleaned reporting workflows, built ETL pipelines, and helped improve delivery speed by 30%.",
   },
   {
-    company: "Koretechx Digital",
+    company: "Koretechx LLC",
     role: "Web Developer",
     period: "Jun 2020 — Aug 2022",
     location: "Florida, USA (Remote)",

@@ -1609,10 +1609,10 @@ button {
 .experience-flow-title h3 {
   margin: 0;
   color: #f7f7f2;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(34px, 4.8vw, 76px);
-  font-weight: 400;
-  letter-spacing: 0;
+  font-weight: 900;
+  letter-spacing: -0.05em;
   line-height: 0.9;
   text-transform: uppercase;
 }
@@ -1703,10 +1703,10 @@ button {
 .experience-flow-part span {
   white-space: nowrap;
   color: #0a0a0a;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(38px, 5.4vw, 84px);
-  font-weight: 400;
-  letter-spacing: 0;
+  font-weight: 900;
+  letter-spacing: -0.05em;
   line-height: 0.9;
   text-transform: uppercase;
 }
