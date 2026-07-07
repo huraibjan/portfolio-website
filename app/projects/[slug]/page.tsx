@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { FadeIn } from "@/components/AnimatedShell";
 import { Footer } from "@/components/Footer";
+import { MobileScreensComposition } from "@/components/MobileScreensComposition";
 import { Nav } from "@/components/Nav";
 import { getProject, projects } from "@/lib/projects";
 
@@ -37,6 +38,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   const websiteShot = project.gallery?.find((item) => item.kind === "website");
   const mobileShots = project.gallery?.filter((item) => item.kind === "mobile") ?? [];
+  const mobileGroup = project.gallery?.find((item) => item.kind === "mobile-group");
+  const mobileScreens = mobileGroup?.screens ?? mobileShots.map((shot) => ({ label: shot.label, src: shot.src }));
   const desktopShots = project.gallery?.filter((item) => item.kind === "desktop") ?? [];
   const appStoreLink = project.links?.find((link) => /ios|app/i.test(link.label));
 
@@ -103,7 +106,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 </FadeIn>
               ) : null}
 
-              {mobileShots.length ? (
+              {mobileScreens.length ? (
                 <FadeIn delay={0.08}>
                   <div className="h-full rounded-[32px] border border-black/15 bg-white/55 p-5 shadow-[0_28px_80px_rgba(0,0,0,0.10)]">
                     <div className="mb-5 flex items-end justify-between gap-5">
@@ -124,30 +127,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                         </a>
                       ) : null}
                     </div>
-                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-3">
-                      {mobileShots.map((shot) => (
-                        <div key={shot.src} className="relative" style={{ aspectRatio: "393/852" }}>
-                          {/* iPhone shell */}
-                          <div className="absolute inset-0 rounded-[14%] bg-[#1c1c1e] shadow-[0_24px_60px_rgba(0,0,0,0.55),inset_0_0_0_1.5px_rgba(255,255,255,0.13)]">
-                            {/* Side buttons — volume */}
-                            <div className="absolute left-[-2px] top-[22%] w-[2px] h-[7%] rounded-l-full bg-[#2c2c2e]" />
-                            <div className="absolute left-[-2px] top-[32%] w-[2px] h-[11%] rounded-l-full bg-[#2c2c2e]" />
-                            <div className="absolute left-[-2px] top-[45%] w-[2px] h-[11%] rounded-l-full bg-[#2c2c2e]" />
-                            {/* Power button */}
-                            <div className="absolute right-[-2px] top-[30%] w-[2px] h-[14%] rounded-r-full bg-[#2c2c2e]" />
-                            {/* Screen bezel */}
-                            <div className="absolute inset-[3.5%] rounded-[11%] overflow-hidden bg-black">
-                              {/* Screenshot */}
-                              <Image src={shot.src} alt={shot.label} fill sizes="160px" className="object-cover object-top" />
-                              {/* Dynamic Island */}
-                              <div className="absolute top-[2.5%] left-1/2 -translate-x-1/2 w-[28%] h-[4%] rounded-full bg-black z-10" />
-                              {/* Home indicator */}
-                              <div className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[30%] h-[0.6%] rounded-full bg-white/35 z-10" />
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <MobileScreensComposition screens={mobileScreens} />
                   </div>
                 </FadeIn>
               ) : null}

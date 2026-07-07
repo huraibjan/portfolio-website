@@ -20,8 +20,8 @@ export const skillGroups = [
     items: ["AWS", "Google Cloud", "Docker", "Kubernetes", "Coolify", "Vercel", "Render", "cPanel", "CI/CD", "Linux", "Nginx", "Custom Hosting"],
   },
   {
-    title: "Automation / Voice AI",
-    items: ["Vapi AI", "Twilio", "n8n", "Make.com", "Chatbots", "Voice Agents", "Google Sheets", "Gmail APIs"],
+    title: "Automation / Voice Agents",
+    items: ["Voice Agent Automation", "n8n", "Make.com", "Microservices", "Scheduling", "Chatbots", "Google Sheets", "Gmail APIs"],
   },
   {
     title: "Databases",

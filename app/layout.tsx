@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Huraib Jan | AI Systems Engineer",
   description:
-    "Portfolio of Huraib Jan — AI Systems Engineer building production-grade AI agents, RAG pipelines, voice automation, full-stack platforms, and mobile apps.",
+    "Portfolio of Huraib Jan — AI Systems Engineer building production-grade AI agents, RAG pipelines, voice agent automation, full-stack platforms, and mobile apps.",
   keywords: ["AI Engineer", "Machine Learning", "RAG", "Full Stack Developer", "Flutter", "Next.js", "Huraib Jan"],
   authors: [{ name: "Huraib Jan" }],
   openGraph: {

@@ -10,7 +10,8 @@ export type Project = {
   gallery?: {
     label: string;
     src: string;
-    kind: "website" | "mobile" | "desktop";
+    kind: "website" | "mobile" | "desktop" | "mobile-group";
+    screens?: { label: string; src: string }[];
   }[];
   impact: string[];
 };
@@ -19,12 +20,12 @@ export const projects: Project[] = [
   {
     slug: "kallin-ai",
     name: "Kallin AI",
-    category: "AI Voice Ordering / Restaurant Automation",
+    category: "Voice Agent Automation / Restaurant Operations",
     description:
-      "AI-powered restaurant voice ordering and operations platform with mobile app, dashboard, menu workflows, notifications, order handling, and AI call automation.",
+      "AI-powered restaurant voice ordering and operations platform with mobile app, dashboard, menu workflows, notifications, order handling, and automated call workflows.",
     role:
-      "AI system architecture, backend workflows, mobile app flow, dashboard logic, voice automation, restaurant operations, product execution.",
-    tech: ["Flutter", "FastAPI", "Vapi AI", "Twilio", "MySQL", "REST APIs", "Push Notifications", "Dashboard UI"],
+      "AI system architecture, backend workflows, mobile app flow, dashboard logic, voice agent automation, restaurant operations, product execution.",
+    tech: ["Flutter", "FastAPI", "Voice Agent Automation", "Scheduling", "MySQL", "REST APIs", "Push Notifications", "Dashboard UI"],
     links: [
       { label: "Website", href: "https://kallin.ai/" },
       { label: "Dashboard", href: "https://dashboard.kallin.ai/" },
@@ -33,12 +34,26 @@ export const projects: Project[] = [
     image: "/projects/kallin/website.png",
     gallery: [
       { label: "Website landing page", src: "/projects/kallin/website.png", kind: "website" },
-      { label: "Mobile app screen 01", src: "/projects/kallin/app-01.webp", kind: "mobile" },
-      { label: "Mobile app screen 02", src: "/projects/kallin/app-02.webp", kind: "mobile" },
-      { label: "Mobile app screen 03", src: "/projects/kallin/app-03.webp", kind: "mobile" },
-      { label: "Mobile app screen 04", src: "/projects/kallin/app-04.webp", kind: "mobile" },
-      { label: "Mobile app screen 05", src: "/projects/kallin/app-05.webp", kind: "mobile" },
-      { label: "Mobile app screen 06", src: "/projects/kallin/app-06.webp", kind: "mobile" },
+      { label: "Kallin dashboard overview", src: "/projects/kallin/dashboard-01.png", kind: "desktop" },
+      { label: "Kallin dashboard analytics", src: "/projects/kallin/dashboard-02.png", kind: "desktop" },
+      { label: "Kallin order workflow", src: "/projects/kallin/dashboard-03.png", kind: "desktop" },
+      { label: "Kallin menu management", src: "/projects/kallin/dashboard-04.png", kind: "desktop" },
+      { label: "Kallin settings workflow", src: "/projects/kallin/dashboard-05.png", kind: "desktop" },
+      { label: "Kallin voice ordering dashboard", src: "/projects/kallin/dashboard-06.png", kind: "desktop" },
+      { label: "Kallin product dashboard", src: "/projects/kallin/dashboard-07.png", kind: "desktop" },
+      {
+        label: "Kallin mobile app screens",
+        src: "/projects/kallin/app-01.webp",
+        kind: "mobile-group",
+        screens: [
+          { label: "Kallin mobile app screen 01", src: "/projects/kallin/app-01.webp" },
+          { label: "Kallin mobile app screen 02", src: "/projects/kallin/app-02.webp" },
+          { label: "Kallin mobile app screen 03", src: "/projects/kallin/app-03.webp" },
+          { label: "Kallin mobile app screen 04", src: "/projects/kallin/app-04.webp" },
+          { label: "Kallin mobile app screen 05", src: "/projects/kallin/app-05.webp" },
+          { label: "Kallin mobile app screen 06", src: "/projects/kallin/app-06.webp" },
+        ],
+      },
     ],
     impact: ["AI call intake", "Restaurant operations", "Mobile ordering"],
   },
@@ -109,7 +124,10 @@ export const projects: Project[] = [
     role: "Founder-level product strategy, AI automation systems, website, content systems, client-facing architecture.",
     tech: ["AI Agents", "Automation", "Next.js", "Workflows", "Marketing Systems", "Analytics"],
     links: [{ label: "Website", href: "https://quantixx.ai/" }],
-    image: "/projects/quantixx-ai.svg",
+    image: "/projects/quantixx-ai/website.png",
+    gallery: [
+      { label: "Quantixx AI website", src: "/projects/quantixx-ai/website.png", kind: "website" },
+    ],
     impact: ["Business agents", "Workflow automation", "Client systems"],
   },
   {
@@ -171,12 +189,12 @@ export const projects: Project[] = [
   },
   {
     slug: "ai-voice-agent-healthcare",
-    name: "AI Voice Agent for Healthcare",
-    category: "Healthcare Voice AI",
+    name: "Healthcare Voice Agent Automation",
+    category: "Healthcare Automation",
     description:
-      "AI voice agent for healthcare workflows such as appointment handling, patient intake support, patient routing, and automated call assistance.",
-    role: "Voice AI architecture, workflow design, conversation logic, automation planning.",
-    tech: ["Voice AI", "Vapi AI", "Twilio", "LLM Workflows", "Call Routing"],
+      "Voice agent automation for healthcare workflows such as appointment handling, patient intake support, patient routing, and automated call assistance.",
+    role: "Voice agent architecture, workflow design, conversation logic, automation planning.",
+    tech: ["Voice Agent Automation", "Scheduling", "LLM Workflows", "Patient Intake", "Call Routing"],
     image: "/projects/ai-voice-agent-healthcare.svg",
     impact: ["Patient intake", "Appointment handling", "Call routing"],
   },

@@ -12,7 +12,9 @@ import {
   animate,
   useInView,
 } from "framer-motion";
+import { gsap } from "gsap";
 import { projects, type Project } from "@/lib/projects";
+import { MobileScreensComposition } from "@/components/MobileScreensComposition";
 import { WarpBackground } from "@/components/ui/warp-background";
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
@@ -25,8 +27,9 @@ const EXPERIENCE = [
     location: "Saddle Brook, NJ, USA",
     type: "Full-Time",
     description:
-      "Built scalable backend microservices for Flutter and web apps, ML models for classification and recommendation, RAG pipelines, multi-agent orchestration, and AI voice agent workflows integrated with Square, Toast, Clover, OpenTable, and Google Cloud. Developed real-time dashboards and automated document-heavy operational workflows.",
-    highlights: ["RAG Pipelines", "Multi-Agent AI", "Voice AI (Vapi)", "ML Models", "Microservices", "Python"],
+      "Built scalable backend microservices, ML models, RAG pipelines, multi-agent orchestration, voice agent automation, scheduling systems, n8n automations, and dashboard workflows across restaurant, healthcare, and operations products.",
+    highlights: ["Voice Agent Automation", "n8n Automations", "Microservices", "Scheduling", "Ollama", "Fine-Tuning"],
+    impact: "Scaled AI workflows from demos into production systems: automated call handling, document-heavy operations, scheduling, POS integrations, and internal dashboards that reduced manual work for operators.",
   },
   {
     company: "Kore Digital",
@@ -37,6 +40,7 @@ const EXPERIENCE = [
     description:
       "Progressed from Full Stack Developer (Sep 2022–Oct 2023) to Data Engineer (Oct 2023–Aug 2024). Built ETL data pipelines, BI dashboards in Tableau and Python (Plotly, Seaborn), EDA on large-scale datasets, and production web apps in React.js/Next.js + Node.js with POS system integrations. Improved development cycle time by 30%.",
     highlights: ["ETL Pipelines", "Tableau / Plotly", "React.js / Next.js", "Node.js", "PostgreSQL", "EDA"],
+    impact: "Grew from full-stack delivery into data engineering ownership: shipped dashboards, cleaned reporting workflows, built ETL pipelines, and helped improve delivery speed by 30%.",
   },
   {
     company: "Koretechx Digital",
@@ -47,6 +51,7 @@ const EXPERIENCE = [
     description:
       "Developed and maintained full-stack web applications using React.js and Node.js. Optimized cloud infrastructure and deployment pipelines, improving deployment efficiency by 30% through CI/CD workflows and modern web technologies.",
     highlights: ["React.js", "Node.js", "CI/CD", "Cloud Deployment", "UI/UX"],
+    impact: "Delivered client-facing web systems, improved deployment reliability, tightened UI execution, and helped teams move faster through cleaner frontend and backend implementation.",
   },
   {
     company: "Rockstar Games",
@@ -57,6 +62,7 @@ const EXPERIENCE = [
     description:
       "Developed server-side game logic and scripting systems on the SA-MP multiplayer platform — auth, RBAC, progression systems, subscription management, and real-time player state persistence. Architected and managed end-to-end multiplayer server infrastructure scaling to 100+ concurrent daily active users.",
     highlights: ["Server Architecture", "RBAC Systems", "Real-time Logic", "Linux Hosting", "Game Scripting"],
+    impact: "Built and operated multiplayer systems with persistent player state, permissions, progression, subscriptions, and real-time logic for 100+ daily concurrent users.",
   },
 ];
 
@@ -89,9 +95,9 @@ const SERVICES = [
     number: "01",
     title: "AI Systems & Agents",
     description:
-      "Production AI agents, RAG pipelines, vector search, and voice automation. Full system design from model to deployment.",
-    skills: ["RAG Pipelines", "PyTorch", "TensorFlow", "NLP", "Multi-Agent", "Vapi AI"],
-    moreSkills: ["XGBoost", "BERT", "Scikit-learn", "Embeddings", "Computer Vision", "FastAPI", "Qdrant", "LangChain", "OpenAI API", "Model Training", "Hyperparameter Tuning", "Ensemble Methods", "Prompt Engineering", "Feature Engineering", "Deep Learning"],
+      "Production AI agents, RAG pipelines, vector search, voice agent automation, local LLM workflows, and model deployment.",
+    skills: ["RAG Pipelines", "PyTorch", "TensorFlow", "NLP", "Multi-Agent", "Voice Agent Automation"],
+    moreSkills: ["XGBoost", "BERT", "Scikit-learn", "Embeddings", "Computer Vision", "FastAPI", "Qdrant", "LangChain", "OpenAI API", "Ollama", "Fine-Tuning", "Model Training", "Hyperparameter Tuning", "Ensemble Methods", "Prompt Engineering", "Feature Engineering", "Deep Learning"],
   },
   {
     number: "02",
@@ -490,7 +496,7 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
               Hi, I&apos;m Huraib Jan.
             </h2>
             <p className="text-dark/70 font-display text-lg sm:text-xl md:text-2xl text-justify leading-snug tracking-tight font-medium max-w-lg">
-              An AI Systems Engineer based in New Jersey. I ship production AI agents, RAG pipelines, voice automation, and full-stack products — end to end.
+              An AI Systems Engineer based in New Jersey. I ship production AI agents, RAG pipelines, voice agent automation, and full-stack products — end to end.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <a
@@ -584,13 +590,16 @@ function BrowserFrame({
         {/* Spacer to balance traffic lights */}
         <div className="w-[52px]" />
       </div>
-      {/* Screenshot */}
-      <div className="flex-1 relative overflow-hidden">
+      {/* Screenshot — fixed 16:9 so landscape screenshots fill without cropping or bars */}
+      <div
+        className={`relative w-full ${isDark ? "bg-[#111]" : "bg-white"}`}
+        style={{ aspectRatio: "16/9" }}
+      >
         <Image
           src={src}
           alt={alt}
           fill
-          className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          className="object-contain"
           sizes="(max-width: 1024px) 100vw, 58vw"
         />
       </div>
@@ -602,7 +611,7 @@ function BrowserFrame({
 const RESUME_SKILLS = [
   {
     category: "AI & Machine Learning",
-    tags: ["Python", "PyTorch", "TensorFlow", "Scikit-learn", "XGBoost", "BERT", "LangChain", "RAG Pipelines", "NLP", "Multi-Agent", "Vapi AI", "OpenAI API", "Qdrant", "Embeddings", "Deep Learning"],
+    tags: ["Python", "PyTorch", "TensorFlow", "Scikit-learn", "XGBoost", "BERT", "LangChain", "RAG Pipelines", "NLP", "Multi-Agent", "Voice Agent Automation", "OpenAI API", "Qdrant", "Embeddings", "Ollama", "Fine-Tuning", "Deep Learning"],
     accent: true,
   },
   {
@@ -830,32 +839,100 @@ function ResumeModal({ onClose }: { onClose: () => void }) {
 // ─── Project Modal ────────────────────────────────────────────────────────────
 const AI_TAGS = new Set([
   "ai", "ml", "rag", "llm", "bert", "gpt", "openai", "xgboost", "nlp",
-  "pytorch", "tensorflow", "vapi ai", "vapi", "voice ai", "multi-agent",
+  "pytorch", "tensorflow", "voice agent automation", "voice ai", "multi-agent",
   "agents", "embeddings", "langchain", "qdrant", "rag pipelines", "deep learning",
 ]);
 
 function isAITag(tag: string) {
-  return AI_TAGS.has(tag.toLowerCase()) || /\b(ai|ml|rag|llm|bert|gpt|openai|xgboost|nlp|pytorch|tensorflow|vapi|agent|embed|voice ai)\b/i.test(tag);
+  return AI_TAGS.has(tag.toLowerCase()) || /\b(ai|ml|rag|llm|bert|gpt|openai|xgboost|nlp|pytorch|tensorflow|agent|embed|voice ai|voice agent)\b/i.test(tag);
 }
 
 function ProjectModal({ project, index, onClose }: { project: Project; index: number; onClose: () => void }) {
-  const mobileShots = project.gallery?.filter((g) => g.kind === "mobile") ?? [];
-  const hasWebShot  = project.gallery?.some((g) => g.kind === "website") ?? !!project.image;
-  const showPhones  = mobileShots.length > 0 && !hasWebShot;
-  const hasAI       = project.tech.some(isAITag);
-  const liveLink    = project.links?.find((l) => !/github/i.test(l.label) && !/app store/i.test(l.label)) ?? project.links?.[0];
-  const githubLink  = project.links?.find((l) => /github/i.test(l.label));
-  const appLink     = project.links?.find((l) => /ios|app store/i.test(l.label));
+  const hasAI      = project.tech.some(isAITag);
+  const liveLink   = project.links?.find((l) => !/github/i.test(l.label) && !/app store/i.test(l.label)) ?? project.links?.[0];
+  const githubLink = project.links?.find((l) => /github/i.test(l.label));
+  const appLink    = project.links?.find((l) => /ios|app store/i.test(l.label));
+
+  const allSlides = project.gallery?.length
+    ? project.gallery
+    : [{ label: project.name, src: project.image, kind: "website" as const }];
+
+  const [slide, setSlide] = useState(0);
+  const [dir, setDir]     = useState(1);
+
+  const goTo = (next: number, d: number) => { setDir(d); setSlide(next); };
+  const goPrev = () => goTo((slide - 1 + allSlides.length) % allSlides.length, -1);
+  const goNext = () => goTo((slide + 1) % allSlides.length, 1);
 
   useEffect(() => {
-    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", esc);
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape")     onClose();
+      if (e.key === "ArrowRight") { setDir(1);  setSlide(s => (s + 1) % allSlides.length); }
+      if (e.key === "ArrowLeft")  { setDir(-1); setSlide(s => (s - 1 + allSlides.length) % allSlides.length); }
+    };
+    window.addEventListener("keydown", handler);
     document.body.style.overflow = "hidden";
     return () => {
-      window.removeEventListener("keydown", esc);
+      window.removeEventListener("keydown", handler);
       document.body.style.overflow = "";
     };
-  }, [onClose]);
+  }, [onClose, allSlides.length]);
+
+  const slideVariants = {
+    enter: (d: number) => ({ x: d > 0 ? "100%" : "-100%", opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit:  (d: number) => ({ x: d > 0 ? "-100%" : "100%", opacity: 0 }),
+  };
+
+  const renderSlide = (s: NonNullable<Project["gallery"]>[0]) => {
+    if (s.kind === "mobile-group") {
+      return (
+        <div className="flex h-full w-full items-center justify-center">
+          <div className="w-full max-w-5xl">
+            <MobileScreensComposition screens={s.screens ?? [{ label: s.label, src: s.src }]} />
+          </div>
+        </div>
+      );
+    }
+
+    if (s.kind === "mobile") {
+      return (
+        <div className="flex items-center justify-center h-full w-full">
+          <div className="relative h-[86%] flex-shrink-0" style={{ aspectRatio: "393/852" }}>
+            <div className="absolute inset-0 rounded-[14%] bg-[#1c1c1e] shadow-[0_24px_60px_rgba(0,0,0,0.7),inset_0_0_0_1.5px_rgba(255,255,255,0.1)]">
+              <div className="absolute left-[-2px] top-[22%] w-[2px] h-[7%] rounded-l-full bg-[#2c2c2e]" />
+              <div className="absolute left-[-2px] top-[32%] w-[2px] h-[11%] rounded-l-full bg-[#2c2c2e]" />
+              <div className="absolute right-[-2px] top-[30%] w-[2px] h-[14%] rounded-r-full bg-[#2c2c2e]" />
+              <div className="absolute inset-[3.5%] rounded-[11%] overflow-hidden bg-black">
+                <Image src={s.src} alt={s.label} fill sizes="320px" className="object-contain" />
+                <div className="absolute top-[2.5%] left-1/2 -translate-x-1/2 w-[28%] h-[4%] rounded-full bg-black z-10" />
+                <div className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[30%] h-[0.6%] rounded-full bg-white/35 z-10" />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    if (s.kind === "website") {
+      return (
+        <div className="flex items-center justify-center w-full h-full">
+          <div className="w-full">
+            <BrowserFrame src={s.src} alt={s.label} url={liveLink?.href.replace(/^https?:\/\//, "")} isDark />
+          </div>
+        </div>
+      );
+    }
+    // desktop — 16:9 container, full image visible
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <div className="w-full overflow-hidden rounded-[20px] border border-white/10 bg-[#111]" style={{ aspectRatio: "16/9" }}>
+          <div className="relative w-full h-full">
+            <Image src={s.src} alt={s.label} fill sizes="(max-width:1024px) 100vw, 55vw" className="object-contain" />
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const stagger = (i: number) => ({ duration: 0.45, delay: 0.15 + i * 0.07, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] });
 
@@ -896,49 +973,67 @@ function ProjectModal({ project, index, onClose }: { project: Project; index: nu
           </svg>
         </button>
 
-        {/* ── LEFT: Visual ── */}
-        <div className="relative w-full lg:w-[52%] h-[38vh] lg:h-full flex-shrink-0 bg-white/[0.02] overflow-hidden flex items-center justify-center p-5 md:p-8">
-          {/* Giant index watermark */}
-          <span className="absolute inset-0 flex items-center justify-center font-display font-black text-[18rem] text-white/[0.025] select-none pointer-events-none leading-none">
+        {/* ── LEFT: Gallery Slider ── */}
+        <div className="relative w-full lg:w-[52%] h-[42vh] lg:h-full flex-shrink-0 bg-white/[0.02] flex flex-col overflow-hidden">
+          {/* Watermark */}
+          <span className="absolute inset-0 flex items-center justify-center font-display font-black text-[18rem] text-white/[0.025] select-none pointer-events-none leading-none z-0">
             {String(index + 1).padStart(2, "0")}
           </span>
 
-          {showPhones ? (
-            /* Phone mockups for mobile-only projects */
-            <div className="flex items-center justify-center gap-3 h-full w-full">
-              {mobileShots.slice(0, 3).map((shot, si) => (
-                <div
-                  key={si}
-                  className="relative flex-shrink-0 h-[78%]"
-                  style={{ aspectRatio: "393/852", transform: si === 1 ? "scale(1.07)" : "translateY(10px)", zIndex: si === 1 ? 2 : 1 }}
-                >
-                  <div className="absolute inset-0 rounded-[14%] bg-[#1c1c1e] shadow-[0_24px_60px_rgba(0,0,0,0.7),inset_0_0_0_1.5px_rgba(255,255,255,0.1)]">
-                    <div className="absolute left-[-2px] top-[22%] w-[2px] h-[7%] rounded-l-full bg-[#2c2c2e]" />
-                    <div className="absolute left-[-2px] top-[32%] w-[2px] h-[11%] rounded-l-full bg-[#2c2c2e]" />
-                    <div className="absolute right-[-2px] top-[30%] w-[2px] h-[14%] rounded-r-full bg-[#2c2c2e]" />
-                    <div className="absolute inset-[3.5%] rounded-[11%] overflow-hidden bg-black">
-                      <Image src={shot.src} alt={shot.label} fill sizes="180px" className="object-cover object-top" />
-                      <div className="absolute top-[2.5%] left-1/2 -translate-x-1/2 w-[28%] h-[4%] rounded-full bg-black z-10" />
-                      <div className="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[30%] h-[0.6%] rounded-full bg-white/35 z-10" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            /* Browser frame */
-            <div className="w-full h-full">
-              <BrowserFrame
-                src={project.image}
-                alt={project.name}
-                url={liveLink?.href.replace(/^https?:\/\//, "")}
-                isDark
-              />
+          {/* Slide counter */}
+          {allSlides.length > 1 && (
+            <div className="absolute top-4 left-4 z-10 font-mono text-[10px] text-white/50 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
+              {slide + 1} / {allSlides.length}
             </div>
           )}
 
-          {/* Bottom gradient fade */}
-          <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none lg:hidden" />
+          {/* Slide area */}
+          <div className="flex-1 relative overflow-hidden p-4 md:p-7 z-10">
+            <AnimatePresence initial={false} custom={dir} mode="wait">
+              <motion.div
+                key={slide}
+                custom={dir}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.32, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="absolute inset-4 md:inset-7"
+              >
+                {renderSlide(allSlides[slide])}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Navigation */}
+          {allSlides.length > 1 && (
+            <div className="flex-shrink-0 flex items-center justify-between px-5 pb-4 z-10">
+              <button
+                onClick={goPrev}
+                className="w-9 h-9 rounded-full bg-white/[0.08] hover:bg-white/[0.16] border border-white/10 flex items-center justify-center transition-colors text-white/60 hover:text-white"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </button>
+              <div className="flex gap-2 items-center">
+                {allSlides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => { setDir(i > slide ? 1 : -1); setSlide(i); }}
+                    className={`rounded-full transition-all duration-200 ${i === slide ? "w-5 h-1.5 bg-accent" : "w-1.5 h-1.5 bg-white/25 hover:bg-white/45"}`}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={goNext}
+                className="w-9 h-9 rounded-full bg-white/[0.08] hover:bg-white/[0.16] border border-white/10 flex items-center justify-center transition-colors text-white/60 hover:text-white"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </button>
+            </div>
+          )}
+
+          {/* Mobile fade */}
+          <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none lg:hidden z-20" />
         </div>
 
         {/* ── RIGHT: Details (scrollable) ── */}
@@ -953,7 +1048,7 @@ function ProjectModal({ project, index, onClose }: { project: Project; index: nu
                   AI / ML
                 </span>
               )}
-              {mobileShots.length > 0 && (
+              {allSlides.some(s => s.kind === "mobile" || s.kind === "mobile-group") && (
                 <span className="font-mono text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-white/6 border border-white/15 text-white/50">
                   Mobile App
                 </span>
@@ -1199,7 +1294,7 @@ function ProjectCard({
 
         {/* Right: Image in macOS browser frame */}
         <div
-          className="w-full lg:w-7/12 h-[38vh] lg:h-full mt-8 lg:mt-0 lg:ml-8 cursor-pointer group"
+          className="w-full lg:w-7/12 mt-8 lg:mt-0 lg:ml-8 lg:self-center cursor-pointer group"
           onClick={() => onOpen(project)}
         >
           <BrowserFrame
@@ -1292,7 +1387,7 @@ function AboutSection() {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-secondary text-base md:text-lg leading-relaxed">
               <p>
-                My work spans AI agents, RAG pipelines, voice automation, mobile apps, and full-stack systems. I build from architecture to deployment — backend, database, AI workflow, dashboard, and business-facing presentation all the way through.
+                My work spans AI agents, RAG pipelines, voice agent automation, mobile apps, and full-stack systems. I build from architecture to deployment — backend, database, AI workflow, dashboard, and business-facing presentation all the way through.
               </p>
               <p>
                 Strongest in product execution: every system I ship is designed to run in production, not just demo well. Currently open to AI Systems and full-stack roles in the U.S.
@@ -1324,6 +1419,102 @@ function AboutSection() {
 }
 
 // ─── Experience Section ───────────────────────────────────────────────────────
+function FlowingExperienceMenu() {
+  return (
+    <motion.div
+      className="experience-flow-wrap"
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.18 }}
+      transition={{ duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94] }}
+    >
+      <nav className="experience-flow-menu" aria-label="Work experience">
+        {EXPERIENCE.map((exp, index) => (
+          <FlowingExperienceItem key={exp.company + exp.period} exp={exp} index={index} />
+        ))}
+      </nav>
+    </motion.div>
+  );
+}
+
+function FlowingExperienceItem({ exp, index }: { exp: (typeof EXPERIENCE)[number]; index: number }) {
+  const itemRef = useRef<HTMLDivElement>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const marqueeInnerRef = useRef<HTMLDivElement>(null);
+  const repetitions = 5;
+
+  const findClosestEdge = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    const item = itemRef.current;
+    if (!item) return "top";
+
+    const rect = item.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const topEdge = (x - rect.width / 2) ** 2 + y ** 2;
+    const bottomEdge = (x - rect.width / 2) ** 2 + (y - rect.height) ** 2;
+
+    return topEdge < bottomEdge ? "top" : "bottom";
+  }, []);
+
+  const handleMouseEnter = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (!marqueeRef.current || !marqueeInnerRef.current) return;
+
+      const edge = findClosestEdge(event);
+      gsap
+        .timeline({ defaults: { duration: 0.62, ease: "expo.out" } })
+        .set(marqueeRef.current, { y: edge === "top" ? "-101%" : "101%" }, 0)
+        .set(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0)
+        .to([marqueeRef.current, marqueeInnerRef.current], { y: "0%" }, 0);
+    },
+    [findClosestEdge]
+  );
+
+  const handleMouseLeave = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (!marqueeRef.current || !marqueeInnerRef.current) return;
+
+      const edge = findClosestEdge(event);
+      gsap
+        .timeline({ defaults: { duration: 0.62, ease: "expo.out" } })
+        .to(marqueeRef.current, { y: edge === "top" ? "-101%" : "101%" }, 0)
+        .to(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0);
+    },
+    [findClosestEdge]
+  );
+
+  return (
+    <div ref={itemRef} className="experience-flow-item" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div className="experience-flow-link">
+        <span className="experience-flow-number">0{index + 1}</span>
+        <div className="experience-flow-title">
+          <h3>{exp.company}</h3>
+          <p>{exp.role}</p>
+        </div>
+        <div className="experience-flow-meta">
+          <strong>{exp.period}</strong>
+          <span>{exp.location}</span>
+          <small>{exp.type}</small>
+        </div>
+      </div>
+
+      <div ref={marqueeRef} className="experience-flow-marquee" aria-hidden="true">
+        <div className="experience-flow-marquee-wrap">
+          <div ref={marqueeInnerRef} className="experience-flow-marquee-inner">
+            {[...Array(repetitions)].map((_, repeatedIndex) => (
+              <div className="experience-flow-part" key={repeatedIndex}>
+                <span>{exp.company}</span>
+                <strong>{exp.impact}</strong>
+                <small>{exp.highlights.join(" / ")}</small>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ExperienceSection() {
   return (
     <>
@@ -1359,64 +1550,7 @@ function ExperienceSection() {
             </motion.div>
           </div>
 
-          {/* Work entries */}
-          <div>
-            {EXPERIENCE.map((exp, i) => (
-              <motion.div
-                key={exp.company + exp.period}
-                className="border-t border-dark/10 py-10 md:py-14 grid grid-cols-1 lg:grid-cols-12 lg:items-center gap-6 lg:gap-10 group"
-                initial={{ opacity: 0, y: 44 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.12 }}
-                transition={{ duration: 0.65, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
-                {/* Period + badge */}
-                <div className="lg:col-span-3 flex flex-col gap-2">
-                  <span className="font-mono text-[10px] tracking-widest text-secondary uppercase">0{i + 1}</span>
-                  <span className="font-mono text-sm font-semibold text-dark group-hover:text-accent transition-colors duration-300 leading-snug">{exp.period}</span>
-                  <div className="flex flex-wrap items-center gap-2 mt-0.5">
-                    <span
-                      className="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border"
-                      style={{
-                        borderColor: exp.type === "Full-Time" ? "rgba(10,10,10,0.2)" : "rgba(10,10,10,0.15)",
-                        color: exp.type === "Full-Time" ? "#0a0a0a" : "rgba(10,10,10,0.5)",
-                      }}
-                    >
-                      {exp.type}
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-mono text-secondary/70 uppercase tracking-wide">{exp.location}</span>
-                </div>
-
-                {/* Company + role */}
-                <div className="lg:col-span-4 flex flex-col gap-2">
-                  <h3
-                    className="font-display font-black tracking-tight text-dark leading-[1.05] group-hover:text-accent transition-colors duration-300"
-                    style={{ fontSize: "clamp(1.5rem, 2.8vw, 2.4rem)" }}
-                  >
-                    {exp.company}
-                  </h3>
-                  <p className="font-mono text-[11px] md:text-xs text-secondary uppercase tracking-wide">{exp.role}</p>
-                </div>
-
-                {/* Description + tags */}
-                <div className="lg:col-span-5 flex flex-col gap-5">
-                  <p className="text-secondary text-sm md:text-[15px] leading-relaxed">{exp.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {exp.highlights.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1.5 rounded-full bg-dark/5 border border-dark/10 text-dark/55 group-hover:border-dark/20 transition-colors duration-300"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-            <div className="border-t border-dark/10" />
-          </div>
+          <FlowingExperienceMenu />
         </div>
       </section>
 
