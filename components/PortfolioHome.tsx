@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import {
   motion,
   AnimatePresence,
@@ -11,11 +11,24 @@ import {
   useMotionValue,
   animate,
   useInView,
+  useReducedMotion,
 } from "framer-motion";
 import { gsap } from "gsap";
 import { projects, type Project } from "@/lib/projects";
 import { MobileScreensComposition } from "@/components/MobileScreensComposition";
 import { WarpBackground } from "@/components/ui/warp-background";
+
+// ─── Mobile detection hook ────────────────────────────────────────────────────
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
 
 // ─── Terminal typing animation data ───────────────────────────────────────────
 
@@ -451,6 +464,8 @@ function Navbar({ onResumeOpen }: { onResumeOpen: () => void }) {
 // ─── Hero Section ─────────────────────────────────────────────────────────────
 function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
   const [nameFontSize, setNameFontSize] = useState("20vw");
+  const isMobile = useIsMobile();
+  const prefersReduced = useReducedMotion();
 
   // Terminal typing animation (starts after preloader finishes at ~2000ms)
   const [termPhase, setTermPhase] = useState(0); // 0=idle 1=typing-cmd 2=badge 3=heading 4=typing-body 5=done
@@ -484,7 +499,7 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
                     clearInterval(iv);
                     setTermPhase(5);
                   }
-                }, 10);
+                }, 16);
               }, 100);
             }, 80);
           }, 150);
@@ -496,7 +511,9 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
   }, []);
 
   const { scrollY } = useScroll();
-  const yParallax = useTransform(scrollY, [0, 2000], [0, -1000]);
+  // Disable parallax on mobile — scroll listeners are expensive on low-end devices
+  const yParallaxRaw = useTransform(scrollY, [0, 2000], [0, -1000]);
+  const yParallax = isMobile ? 0 : yParallaxRaw;
 
   useEffect(() => {
     const calc = () => {
@@ -525,10 +542,10 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
     <div className="h-screen w-full relative z-0">
       <motion.section
         id="hero-section"
-        className="fixed top-0 left-0 w-full min-h-screen flex flex-col justify-between bg-light pt-24 md:pt-32 pb-12 overflow-hidden z-0 will-change-transform"
+        className={`fixed top-0 left-0 w-full min-h-screen flex flex-col justify-between bg-light pt-24 md:pt-32 pb-12 overflow-hidden z-0${isMobile ? "" : " will-change-transform"}`}
         style={{ y: yParallax }}
       >
-        <TechBackground />
+        {!isMobile && <TechBackground />}
 
         {/* Lime glow */}
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent rounded-full opacity-20 blur-[120px] pointer-events-none -z-10 -translate-x-1/3 -translate-y-1/3" />
@@ -690,18 +707,22 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
               <motion.span
                 key={i}
                 className="font-display font-black text-accent tracking-tighter inline-block"
-                style={{ transformOrigin: "50% 100%", willChange: "transform" }}
-                animate={{
-                  y:       [0, -20, 0, -10, 0],
-                  rotateX: [0,  8,  0,   4, 0],
-                  rotateZ: [0,  1.5, 0, -1, 0],
-                  scaleY:  [1, 1.04, 1, 1.02, 1],
-                }}
+                style={{ transformOrigin: "50% 100%", willChange: isMobile ? "auto" : "transform" }}
+                animate={
+                  isMobile || prefersReduced
+                    ? {}
+                    : {
+                        y:       [0, -20, 0, -10, 0],
+                        rotateX: [0,  8,  0,   4, 0],
+                        rotateZ: [0,  1.5, 0, -1, 0],
+                        scaleY:  [1, 1.04, 1, 1.02, 1],
+                      }
+                }
                 transition={{
                   duration: 3.2,
                   delay: i * 0.1,
-                  repeat: Infinity,
-                  repeatDelay: 1.6,
+                  repeat: isMobile || prefersReduced ? 0 : 2,
+                  repeatDelay: 5,
                   ease: [0.25, 0.46, 0.45, 0.94],
                 }}
               >
@@ -1407,20 +1428,19 @@ function ProjectCard({
         width: "100%",
         overflow: "hidden",
         willChange: "transform",
-        // First card covers the hero edges; others are transparent so previous cards show
-        backgroundColor: i === 0 ? "#F2F2F2" : "transparent",
+        backgroundColor: "transparent",
       }}
-      className="flex items-center justify-center p-2 md:p-4"
+      className="flex items-center justify-center rounded-[32px] md:rounded-[48px]"
     >
       <motion.div
         style={{ scale, backgroundColor: colors.bg, color: colors.text }}
-        className="relative flex flex-col lg:flex-row w-full h-full rounded-[32px] md:rounded-[48px] overflow-hidden px-8 md:px-16 lg:px-20 pt-28 md:pt-36 pb-8 md:pb-16"
+        className="relative flex flex-col lg:flex-row w-full h-full rounded-[32px] md:rounded-[48px] overflow-hidden px-8 md:px-12 lg:px-20 pt-16 md:pt-20 lg:pt-36 pb-8 md:pb-16"
       >
         {/* Left column */}
-        <div className="flex flex-col h-full w-full lg:w-5/12 justify-between z-10">
+        <div className="flex flex-col w-full lg:w-5/12 lg:h-full lg:justify-between gap-6 lg:gap-0 z-10">
           <div>
             <span
-              className="font-mono text-xs md:text-sm tracking-widest uppercase font-semibold block mb-8"
+              className="font-mono text-xs md:text-sm tracking-widest uppercase font-semibold block mb-4 lg:mb-8"
               style={{ color: colors.label }}
             >
               (WORK)
@@ -1433,7 +1453,7 @@ function ProjectCard({
             </h2>
           </div>
 
-          <div className="flex flex-col gap-12 lg:gap-24">
+          <div className="flex flex-col gap-4 lg:gap-24">
             <div className="flex items-center justify-between w-full lg:w-4/5">
               <div className="w-8 h-8 rotate-45 ml-1 shrink-0" style={{ backgroundColor: colors.text }} />
               <button
@@ -1540,12 +1560,13 @@ function WorkSection({ onSelectProject }: { onSelectProject: (p: Project) => voi
 
 // ─── About Section ────────────────────────────────────────────────────────────
 function AboutSection() {
+  const isMobile = useIsMobile();
   return (
     <WarpBackground
       id="about-section"
       className="py-24 md:py-32 lg:py-40 bg-light px-6 md:px-12"
       gridColor="rgba(10,10,10,0.06)"
-      beamsPerSide={4}
+      beamsPerSide={isMobile ? 0 : 4}
       beamSize={5}
       beamDuration={6}
       beamDelayMax={4}
