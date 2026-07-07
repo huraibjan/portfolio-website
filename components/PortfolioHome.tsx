@@ -43,7 +43,7 @@ const TERM_BODY_SEGMENTS: { text: string; cls: string }[] = [
   { text: ", ", cls: "text-white/60" },
   { text: "full-stack applications", cls: "text-[#c8f135]" },
   { text: ", ", cls: "text-white/60" },
-  { text: "automations", cls: "text-white/60" },
+  { text: "automations", cls: "text-[#c8f135]" },
   { text: ", and ", cls: "text-white/60" },
   { text: "secure data pipelines", cls: "text-[#c8f135]" },
   { text: " - end to end.", cls: "text-white/60" },
