@@ -304,12 +304,14 @@ function Preloader() {
   return (
     <motion.div
       className="fixed inset-0 z-[200] flex items-center justify-center bg-dark overflow-hidden pointer-events-none"
+      style={{ willChange: "transform", backfaceVisibility: "hidden", transform: "translateZ(0)" }}
       initial={{ y: 0 }}
       exit={{ y: "-100%", transition: { duration: 1.1, ease: [0.76, 0, 0.24, 1] } }}
     >
       <div className="relative overflow-hidden">
         <motion.h1
           className="font-display font-black text-accent text-5xl md:text-7xl lg:text-9xl tracking-tighter"
+          style={{ willChange: "transform" }}
           initial={{ y: "100%" }}
           animate={{ y: 0 }}
           transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
@@ -506,7 +508,7 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
           }, 150);
         }
       }, 28);
-    }, 2100); // 2000ms preloader + 100ms buffer
+    }, 3300); // wait until preloader fully slides away (2000ms + 1100ms exit) so rapid re-renders don't jank the slide
 
     return cleanup;
   }, []);
