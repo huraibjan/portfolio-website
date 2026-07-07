@@ -17,6 +17,40 @@ import { projects, type Project } from "@/lib/projects";
 import { MobileScreensComposition } from "@/components/MobileScreensComposition";
 import { WarpBackground } from "@/components/ui/warp-background";
 
+// ─── Terminal typing animation data ───────────────────────────────────────────
+
+const TERM_CMD = "cat biography.txt";
+
+const TERM_BODY_SEGMENTS: { text: string; cls: string }[] = [
+  { text: "> ", cls: "text-white/35" },
+  { text: "An ", cls: "text-white/60" },
+  { text: "AI Systems Engineer", cls: "text-[#c8f135]" },
+  { text: " based in New Jersey. I ship production ", cls: "text-white/60" },
+  { text: "AI agents", cls: "text-[#c8f135]" },
+  { text: ", ", cls: "text-white/60" },
+  { text: "full-stack applications", cls: "text-[#c8f135]" },
+  { text: ", ", cls: "text-white/60" },
+  { text: "automations", cls: "text-white/60" },
+  { text: ", and ", cls: "text-white/60" },
+  { text: "secure data pipelines", cls: "text-[#c8f135]" },
+  { text: " - end to end.", cls: "text-white/60" },
+];
+
+const TERM_BODY_TOTAL = TERM_BODY_SEGMENTS.reduce((n, s) => n + s.text.length, 0);
+
+// Flat per-character array for per-char opacity control (keeps box size constant)
+const TERM_BODY_CHARS: { char: string; cls: string }[] = [];
+for (const seg of TERM_BODY_SEGMENTS) {
+  for (const char of seg.text) {
+    TERM_BODY_CHARS.push({ char, cls: seg.cls });
+  }
+}
+
+const TERM_CMD_CHARS = TERM_CMD.split("").map((char, i) => ({
+  char,
+  cls: i < 3 ? "text-[#89dceb]" : "text-white/80",
+}));
+
 // ─── Data ──────────────────────────────────────────────────────────────────────
 
 const EXPERIENCE = [
@@ -417,6 +451,50 @@ function Navbar({ onResumeOpen }: { onResumeOpen: () => void }) {
 // ─── Hero Section ─────────────────────────────────────────────────────────────
 function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
   const [nameFontSize, setNameFontSize] = useState("20vw");
+
+  // Terminal typing animation (starts after preloader finishes at ~2000ms)
+  const [termPhase, setTermPhase] = useState(0); // 0=idle 1=typing-cmd 2=badge 3=heading 4=typing-body 5=done
+  const [termCmdChars, setTermCmdChars] = useState(0);
+  const [termBodyChars, setTermBodyChars] = useState(0);
+
+  useEffect(() => {
+    let iv: ReturnType<typeof setInterval>;
+    let to: ReturnType<typeof setTimeout>;
+    const cleanup = () => { clearInterval(iv); clearTimeout(to); };
+
+    to = setTimeout(() => {
+      setTermPhase(1);
+      let c = 0;
+      iv = setInterval(() => {
+        c++;
+        setTermCmdChars(c);
+        if (c >= TERM_CMD.length) {
+          clearInterval(iv);
+          to = setTimeout(() => {
+            setTermPhase(2);
+            to = setTimeout(() => {
+              setTermPhase(3);
+              to = setTimeout(() => {
+                setTermPhase(4);
+                let b = 0;
+                iv = setInterval(() => {
+                  b++;
+                  setTermBodyChars(b);
+                  if (b >= TERM_BODY_TOTAL) {
+                    clearInterval(iv);
+                    setTermPhase(5);
+                  }
+                }, 10);
+              }, 100);
+            }, 80);
+          }, 150);
+        }
+      }, 28);
+    }, 2100); // 2000ms preloader + 100ms buffer
+
+    return cleanup;
+  }, []);
+
   const { scrollY } = useScroll();
   const yParallax = useTransform(scrollY, [0, 2000], [0, -1000]);
 
@@ -482,60 +560,155 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
             ))}
           </nav>
 
-          {/* Right: Description */}
+          {/* Right: Terminal biography */}
           <motion.div
             className="w-full lg:w-1/2 flex flex-col justify-center lg:pl-16 xl:pl-24 pb-8 lg:pb-24 relative"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
           >
-            <span className="font-mono text-[10px] tracking-widest uppercase text-secondary mb-4 block">
-              (AVAILABLE FOR AI SYSTEMS ROLES)
-            </span>
-            <h2 className="text-dark font-display text-xl sm:text-2xl md:text-3xl leading-snug tracking-tight font-semibold mb-4 max-w-lg">
-              Hi, I&apos;m Huraib Jan.
-            </h2>
-            <p className="text-dark/70 font-display text-lg sm:text-xl md:text-2xl text-justify leading-snug tracking-tight font-medium max-w-lg">
-              An AI Systems Engineer based in New Jersey. I ship production AI agents, RAG pipelines, voice agent automation, and full-stack products — end to end.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            {/* Terminal window */}
+            <div className="rounded-2xl overflow-hidden shadow-2xl border border-black/10 max-w-lg w-full">
+              {/* Title bar */}
+              <div className="flex items-center gap-2 px-4 py-3 bg-[#1e1e2e]">
+                <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+                <div className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
+                <div className="w-3 h-3 rounded-full bg-[#28C840]" />
+                <span className="ml-2 font-mono text-[11px] text-white/30 tracking-wide">biography.txt — zsh</span>
+              </div>
+
+              {/* Terminal body — all content always rendered so box never resizes */}
+              <div className="bg-[#13131f] px-5 py-5 font-mono text-sm leading-7">
+                {/* Command line */}
+                <p>
+                  <span className="text-[#c8f135]">huraib</span>
+                  <span className="text-white/40">@macbook</span>
+                  <span className="text-white/25"> ~ % </span>
+                  {TERM_CMD_CHARS.map((item, i) => (
+                    <span key={i} className={item.cls} style={{ opacity: termCmdChars > i ? 1 : 0 }}>
+                      {item.char}
+                    </span>
+                  ))}
+                  {(termPhase === 0 || termPhase === 1) && (
+                    <span className="inline-block w-[7px] h-[1em] bg-white/60 ml-px align-middle animate-[blink_1.1s_step-end_infinite]" />
+                  )}
+                </p>
+
+                {/* Badge — always in DOM, fades in */}
+                <p
+                  className="text-white/40 text-xs tracking-widest mt-1 transition-opacity duration-300"
+                  style={{ opacity: termPhase >= 2 ? 1 : 0 }}
+                >
+                  (AVAILABLE FOR AI SYSTEMS ROLES)
+                </p>
+
+                {/* Heading — always in DOM, fades in */}
+                <p
+                  className="mt-3 transition-opacity duration-300"
+                  style={{ opacity: termPhase >= 3 ? 1 : 0 }}
+                >
+                  <span className="text-white/30"># </span>
+                  <span className="text-white/90 font-semibold">Hi, I&apos;m Huraib Jan.</span>
+                </p>
+
+                {/* Body — all chars always rendered, opacity per-char for typewriter effect */}
+                <p className="mt-3">
+                  {TERM_BODY_CHARS.map((item, i) => (
+                    <span key={i} className={item.cls} style={{ opacity: termBodyChars > i ? 1 : 0 }}>
+                      {item.char}
+                    </span>
+                  ))}
+                  {termPhase >= 5 && (
+                    <span className="inline-block w-[9px] h-[1.1em] bg-white/70 ml-0.5 align-middle animate-[blink_1.1s_step-end_infinite]" />
+                  )}
+                </p>
+              </div>
+            </div>
+
+            {/* Icon buttons */}
+            <div className="mt-7 flex items-center gap-3">
               <a
                 href="mailto:huraibjansarhandi@gmail.com"
-                className="font-mono text-xs tracking-widest uppercase text-dark/60 hover:text-accent transition-colors border-b border-dark/20 pb-0.5"
+                className="group relative flex items-center justify-center w-11 h-11 rounded-full bg-dark/8 border border-dark/12 hover:bg-dark hover:border-dark transition-all duration-300"
+                aria-label="Email Me"
               >
-                Email Me ↗
+                <svg className="w-4 h-4 text-dark/60 group-hover:text-accent transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 font-mono text-[9px] tracking-widest uppercase text-dark/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">Email</span>
               </a>
               <a
                 href="https://github.com/huraibjan"
-                target="_blank"
-                rel="noreferrer"
-                className="font-mono text-xs tracking-widest uppercase text-dark/60 hover:text-accent transition-colors border-b border-dark/20 pb-0.5"
+                target="_blank" rel="noreferrer"
+                className="group relative flex items-center justify-center w-11 h-11 rounded-full bg-dark/8 border border-dark/12 hover:bg-dark hover:border-dark transition-all duration-300"
+                aria-label="GitHub"
               >
-                GitHub ↗
+                <svg className="w-4 h-4 text-dark/60 group-hover:text-accent transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                </svg>
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 font-mono text-[9px] tracking-widest uppercase text-dark/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">GitHub</span>
+              </a>
+              <a
+                href="https://linkedin.com/in/huraibjan"
+                target="_blank" rel="noreferrer"
+                className="group relative flex items-center justify-center w-11 h-11 rounded-full bg-dark/8 border border-dark/12 hover:bg-dark hover:border-dark transition-all duration-300"
+                aria-label="LinkedIn"
+              >
+                <svg className="w-4 h-4 text-dark/60 group-hover:text-accent transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 font-mono text-[9px] tracking-widest uppercase text-dark/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">LinkedIn</span>
               </a>
               <button
                 onClick={onResumeOpen}
-                className="font-mono text-xs tracking-widest uppercase font-bold px-4 py-1.5 rounded-full bg-dark text-accent border border-dark hover:bg-accent hover:text-dark transition-colors"
+                className="group relative flex items-center justify-center w-11 h-11 rounded-full bg-dark border border-dark hover:bg-accent transition-all duration-300"
+                aria-label="Resume"
               >
-                Resume ↗
+                <svg className="w-4 h-4 text-accent group-hover:text-dark transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 font-mono text-[9px] tracking-widest uppercase text-dark/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">Resume</span>
               </button>
             </div>
           </motion.div>
         </div>
 
-        {/* Bottom: Giant name */}
+        {/* Bottom: Giant waving name */}
         <motion.div
           className="w-full z-0 flex flex-col items-center justify-end overflow-hidden mt-4"
           initial={{ opacity: 0, y: 150 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{ perspective: "800px" }}
         >
-          <h1
-            className="font-display font-black text-accent leading-[0.8] tracking-tighter text-center whitespace-nowrap select-none w-full"
-            style={{ fontSize: nameFontSize }}
+          <div
+            className="flex items-end justify-center w-full select-none"
+            style={{ fontSize: nameFontSize, lineHeight: 0.85 }}
+            aria-label="HURAIB JAN"
           >
-            HURAIB JAN
-          </h1>
+            {"HURAIB JAN".split("").map((char, i) => (
+              <motion.span
+                key={i}
+                className="font-display font-black text-accent tracking-tighter inline-block"
+                style={{ transformOrigin: "50% 100%", willChange: "transform" }}
+                animate={{
+                  y:       [0, -20, 0, -10, 0],
+                  rotateX: [0,  8,  0,   4, 0],
+                  rotateZ: [0,  1.5, 0, -1, 0],
+                  scaleY:  [1, 1.04, 1, 1.02, 1],
+                }}
+                transition={{
+                  duration: 3.2,
+                  delay: i * 0.1,
+                  repeat: Infinity,
+                  repeatDelay: 1.6,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
+              >
+                {char === " " ? "\u00a0" : char}
+              </motion.span>
+            ))}
+          </div>
         </motion.div>
       </motion.section>
     </div>
@@ -849,7 +1022,7 @@ function isAITag(tag: string) {
 
 function ProjectModal({ project, index, onClose }: { project: Project; index: number; onClose: () => void }) {
   const hasAI      = project.tech.some(isAITag);
-  const liveLink   = project.links?.find((l) => !/github/i.test(l.label) && !/app store/i.test(l.label)) ?? project.links?.[0];
+  const liveLink   = project.links?.find((l) => !/github/i.test(l.label) && !/ios|app store/i.test(l.label));
   const githubLink = project.links?.find((l) => /github/i.test(l.label));
   const appLink    = project.links?.find((l) => /ios|app store/i.test(l.label));
 
@@ -1066,6 +1239,50 @@ function ProjectModal({ project, index, onClose }: { project: Project; index: nu
               {project.name}
             </motion.h2>
 
+            {/* Links — shown right below the title */}
+            {(liveLink || githubLink || appLink) && (
+              <motion.div
+                className="flex flex-wrap gap-2"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={stagger(2)}
+              >
+                {liveLink && (
+                  <a
+                    href={liveLink.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-widest px-4 py-2 rounded-full bg-accent text-dark hover:bg-accent/85 transition-colors"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    {liveLink.label}
+                  </a>
+                )}
+                {githubLink && (
+                  <a
+                    href={githubLink.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-widest px-4 py-2 rounded-full bg-white/8 border border-white/15 text-white/75 hover:bg-white/14 hover:text-white transition-colors"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                  </a>
+                )}
+                {appLink && (
+                  <a
+                    href={appLink.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-widest px-4 py-2 rounded-full bg-white/8 border border-white/15 text-white/75 hover:bg-white/14 hover:text-white transition-colors"
+                  >
+                    <svg viewBox="0 0 814 1000" width="11" height="11" fill="currentColor"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 537.8 37.5 339.9 37.5 337.7v-10.6c0-127.4 83.1-194 164.3-194 44.4 0 81.1 29.3 108.7 29.3 26.3 0 67.4-31.5 118.7-31.5 19.2 0 108.2 1.9 163.7 93.3zm-202.6-333.8c24.9-29.3 42.2-70.1 42.2-110.9 0-5.8-.6-11.6-1.3-16.8-40.2 1.3-88.2 26.3-116.5 58.1-22.4 25.7-43.7 66.4-43.7 107.9 0 6.4.6 12.8 1.3 18.9 4.5.6 9 1.3 13.5 1.3 36.4.1 79.4-23.6 104.5-58.5z"/></svg>
+                    App Store
+                  </a>
+                )}
+              </motion.div>
+            )}
+
             {/* Description */}
             <motion.p className="text-white/60 text-sm md:text-[15px] leading-relaxed" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={stagger(2)}>
               {project.description}
@@ -1109,45 +1326,6 @@ function ProjectModal({ project, index, onClose }: { project: Project; index: nu
               <p className="text-white/50 text-sm leading-relaxed">{project.role}</p>
             </motion.div>
 
-            {/* Links */}
-            <motion.div
-              className="flex flex-wrap gap-3 pt-4 border-t border-white/10"
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={stagger(6)}
-            >
-              {liveLink && (
-                <a
-                  href={liveLink.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-mono text-xs font-bold uppercase tracking-widest px-5 py-2.5 rounded-full bg-accent text-dark hover:bg-accent/85 transition-colors"
-                >
-                  {liveLink.label} ↗
-                </a>
-              )}
-              {githubLink && (
-                <a
-                  href={githubLink.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-mono text-xs font-bold uppercase tracking-widest px-5 py-2.5 rounded-full bg-white/7 border border-white/15 text-white/65 hover:bg-white/14 transition-colors"
-                >
-                  GitHub ↗
-                </a>
-              )}
-              {appLink && (
-                <a
-                  href={appLink.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-mono text-xs font-bold uppercase tracking-widest px-5 py-2.5 rounded-full bg-white/7 border border-white/15 text-white/65 hover:bg-white/14 transition-colors"
-                >
-                  App Store ↗
-                </a>
-              )}
-            </motion.div>
-
             {/* ESC hint */}
             <p className="font-mono text-[9px] uppercase tracking-widest text-white/18 text-right mt-auto">Press ESC to close</p>
           </div>
@@ -1177,7 +1355,8 @@ function ProjectCard({
     offset: ["start start", "end start"],
   });
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
-  const liveLink = project.links?.[0];
+  const liveLink = project.links?.find((l) => !/github/i.test(l.label) && !/ios|app store/i.test(l.label));
+  const appLink  = project.links?.find((l) => /ios|app store/i.test(l.label));
 
   // Final "view all" card
   if (i === total) {
@@ -1276,7 +1455,7 @@ function ProjectCard({
               </div>
               {liveLink && (
                 <div className="grid grid-cols-3 gap-4">
-                  <span className="col-span-1 opacity-60">Source:</span>
+                  <span className="col-span-1 opacity-60">Website:</span>
                   <a
                     href={liveLink.href}
                     target="_blank"
@@ -1284,7 +1463,28 @@ function ProjectCard({
                     className="col-span-2 font-medium underline underline-offset-4 hover:opacity-100 transition-opacity"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {liveLink.label}
+                    {liveLink.label} ↗
+                  </a>
+                </div>
+              )}
+              {appLink && (
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <span className="col-span-1 opacity-60">iOS App:</span>
+                  <a
+                    href={appLink.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="col-span-2 inline-flex items-center gap-2 bg-white text-black rounded-xl px-3 py-1.5 hover:bg-white/85 transition-colors w-fit"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {/* Apple logo */}
+                    <svg viewBox="0 0 814 1000" className="w-4 h-4 shrink-0 fill-black">
+                      <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.7 0 663 0 541.8c0-207.5 135.4-317.3 269-317.3 70.1 0 128.4 46.4 172.5 46.4 42.8 0 109.8-49.1 189.2-49.1 30.8 0 108.2 2.6 168.6 71.3zm-457.4-187.8c3.2-22.4 14.1-51.3 33.5-75.2 21.1-26.3 58.1-45.8 92.2-47.4 3.8 26.9-6.7 53.8-26.3 72.6-19.6 18.8-54.5 32.6-99.4 50z"/>
+                    </svg>
+                    <div className="flex flex-col leading-tight">
+                      <span className="text-[8px] font-normal tracking-wide">Download on the</span>
+                      <span className="text-[12px] font-semibold tracking-tight">App Store</span>
+                    </div>
                   </a>
                 </div>
               )}
