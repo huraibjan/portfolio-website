@@ -645,7 +645,7 @@ function HeroSection({ onResumeOpen }: { onResumeOpen: () => void }) {
             </div>
 
             {/* Icon buttons */}
-            <div className="mt-7 flex items-center gap-3">
+            <div className="mt-7 flex items-center gap-3 justify-center lg:justify-start">
               <a
                 href="mailto:huraibjansarhandi@gmail.com"
                 className="group relative flex items-center justify-center w-11 h-11 rounded-full bg-dark/8 border border-dark/12 hover:bg-dark hover:border-dark transition-all duration-300"
@@ -1293,9 +1293,9 @@ function ProjectModal({ project, index, onClose }: { project: Project; index: nu
                     href={appLink.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-widest px-4 py-2 rounded-full bg-white/8 border border-white/15 text-white/75 hover:bg-white/14 hover:text-white transition-colors"
+                    className="inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-widest px-4 py-2 rounded-full bg-white/8 border border-white/15 text-white/75 hover:bg-white/14 hover:text-white transition-colors"
                   >
-                    <svg viewBox="0 0 814 1000" width="11" height="11" fill="currentColor"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 537.8 37.5 339.9 37.5 337.7v-10.6c0-127.4 83.1-194 164.3-194 44.4 0 81.1 29.3 108.7 29.3 26.3 0 67.4-31.5 118.7-31.5 19.2 0 108.2 1.9 163.7 93.3zm-202.6-333.8c24.9-29.3 42.2-70.1 42.2-110.9 0-5.8-.6-11.6-1.3-16.8-40.2 1.3-88.2 26.3-116.5 58.1-22.4 25.7-43.7 66.4-43.7 107.9 0 6.4.6 12.8 1.3 18.9 4.5.6 9 1.3 13.5 1.3 36.4.1 79.4-23.6 104.5-58.5z"/></svg>
+                    <svg viewBox="0 0 384 512" preserveAspectRatio="xMidYMid meet" className="w-3.5 h-3.5 shrink-0" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
                     App Store
                   </a>
                 )}
@@ -1374,8 +1374,9 @@ function ProjectCard({
     offset: ["start start", "end start"],
   });
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
-  const liveLink = project.links?.find((l) => !/github/i.test(l.label) && !/ios|app store/i.test(l.label));
-  const appLink  = project.links?.find((l) => /ios|app store/i.test(l.label));
+  const liveLink   = project.links?.find((l) => !/github/i.test(l.label) && !/ios|app store/i.test(l.label));
+  const appLink    = project.links?.find((l) => /ios|app store/i.test(l.label));
+  const githubLink = project.links?.find((l) => /github/i.test(l.label));
 
   // Final "view all" card
   if (i === total) {
@@ -1457,9 +1458,16 @@ function ProjectCard({
               <div className="w-8 h-8 rotate-45 ml-1 shrink-0" style={{ backgroundColor: colors.text }} />
               <button
                 onClick={() => onOpen(project)}
-                className="font-semibold text-sm tracking-wide font-mono uppercase hover:opacity-60 transition-opacity"
+                className="group/vp inline-flex items-center gap-2 font-semibold text-sm tracking-wide font-mono uppercase hover:opacity-60 transition-opacity"
               >
                 View Project
+                <svg
+                  width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+                  className="shrink-0 transition-transform duration-300 group-hover/vp:translate-x-1 group-hover/vp:-translate-y-1"
+                >
+                  <path d="M7 17L17 7M17 7H8M17 7v9" />
+                </svg>
               </button>
             </div>
 
@@ -1486,6 +1494,21 @@ function ProjectCard({
                   </a>
                 </div>
               )}
+              {githubLink && (
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <span className="col-span-1 opacity-60">GitHub:</span>
+                  <a
+                    href={githubLink.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="col-span-2 inline-flex items-center gap-2 font-medium underline underline-offset-4 hover:opacity-100 transition-opacity w-fit"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    View Code ↗
+                  </a>
+                </div>
+              )}
               {appLink && (
                 <div className="grid grid-cols-3 gap-4 items-center">
                   <span className="col-span-1 opacity-60">iOS App:</span>
@@ -1497,8 +1520,8 @@ function ProjectCard({
                     onClick={(e) => e.stopPropagation()}
                   >
                     {/* Apple logo */}
-                    <svg viewBox="0 0 814 1000" className="w-4 h-4 shrink-0 fill-black">
-                      <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.7 0 663 0 541.8c0-207.5 135.4-317.3 269-317.3 70.1 0 128.4 46.4 172.5 46.4 42.8 0 109.8-49.1 189.2-49.1 30.8 0 108.2 2.6 168.6 71.3zm-457.4-187.8c3.2-22.4 14.1-51.3 33.5-75.2 21.1-26.3 58.1-45.8 92.2-47.4 3.8 26.9-6.7 53.8-26.3 72.6-19.6 18.8-54.5 32.6-99.4 50z"/>
+                    <svg viewBox="0 0 384 512" preserveAspectRatio="xMidYMid meet" className="w-4 h-4 shrink-0 fill-black">
+                      <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
                     </svg>
                     <div className="flex flex-col leading-tight">
                       <span className="text-[8px] font-normal tracking-wide">Download on the</span>
