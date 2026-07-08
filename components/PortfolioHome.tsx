@@ -1765,7 +1765,7 @@ function ExperienceSection() {
   return (
     <>
       {/* ── Work Experience — light bg (matches About) ── */}
-      <section id="experience-section" className="py-24 md:py-32 lg:py-40 bg-light px-6 md:px-12">
+      <section id="experience-section" className="relative z-10 py-24 md:py-32 lg:py-40 bg-light px-6 md:px-12">
         <div className="max-w-7xl mx-auto w-full">
           {/* Header */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 md:mb-24">
@@ -1894,7 +1894,7 @@ function ServicesSection() {
   const activeService = SERVICES.find((s) => s.number === openModal);
 
   return (
-    <section id="services-section" className="py-24 md:py-32 lg:py-40 bg-light px-6 md:px-12">
+    <section id="services-section" className="relative z-10 py-24 md:py-32 lg:py-40 bg-light px-6 md:px-12">
       <div className="max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-20 md:mb-28">
           <div className="lg:col-span-9">
