@@ -17,6 +17,7 @@ import { gsap } from "gsap";
 import { projects, type Project } from "@/lib/projects";
 import { MobileScreensComposition } from "@/components/MobileScreensComposition";
 import { WarpBackground } from "@/components/ui/warp-background";
+import FallingIcons from "@/components/FallingIcons";
 
 // ─── Mobile detection hook ────────────────────────────────────────────────────
 function useIsMobile() {
@@ -2051,11 +2052,71 @@ function ServicesSection() {
   );
 }
 
+// ─── Tech Stack Icons ─────────────────────────────────────────────────────────
+// `slug` → devicon CDN path; `url` → full custom URL (for icons not in devicon).
+const TECH_ICONS: { name: string; slug?: string; url?: string }[] = [
+  { name: "Python", slug: "python/python-original" },
+  { name: "FastAPI", slug: "fastapi/fastapi-original" },
+  { name: "TypeScript", slug: "typescript/typescript-original" },
+  { name: "JavaScript", slug: "javascript/javascript-original" },
+  { name: "React", slug: "react/react-original" },
+  { name: "Next.js", slug: "nextjs/nextjs-original" },
+  { name: "Node.js", slug: "nodejs/nodejs-original" },
+  { name: "Flutter", slug: "flutter/flutter-original" },
+  { name: "LangChain", url: "https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@latest/icons/langchain-color.svg" },
+  { name: "PostgreSQL", slug: "postgresql/postgresql-original" },
+  { name: "MySQL", slug: "mysql/mysql-original" },
+  { name: "Redis", slug: "redis/redis-original" },
+  { name: "Docker", slug: "docker/docker-original" },
+  { name: "Supabase", slug: "supabase/supabase-original" },
+  { name: "Tailwind CSS", slug: "tailwindcss/tailwindcss-original" },
+  { name: "PyTorch", slug: "pytorch/pytorch-original" },
+  { name: "TensorFlow", slug: "tensorflow/tensorflow-original" },
+  { name: "Pandas", slug: "pandas/pandas-original" },
+  { name: "NumPy", slug: "numpy/numpy-original" },
+  { name: "Google Cloud", slug: "googlecloud/googlecloud-original" },
+  { name: "Git", slug: "git/git-original" },
+  { name: "Kotlin", slug: "kotlin/kotlin-original" },
+  { name: "Java", slug: "java/java-original" },
+  { name: "Figma", slug: "figma/figma-original" },
+];
+
+const DEVICON_BASE = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/";
+const TECH_ICON_SRCS = TECH_ICONS.map((t) => ({
+  name: t.name,
+  src: t.url ?? `${DEVICON_BASE}${t.slug}.svg`,
+}));
+
 // ─── Footer ───────────────────────────────────────────────────────────────────
 function Footer() {
+  // Start the falling icons only once the footer is actually revealed at the page bottom
+  const [iconsActive, setIconsActive] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 120;
+      if (nearBottom) setIconsActive(true);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <footer id="footer-section" className="relative w-full h-[85vh] md:h-[90vh] overflow-hidden">
       <div className="fixed bottom-0 left-0 w-full h-[85vh] md:h-[90vh] bg-dark px-6 md:px-12 pt-16 md:pt-24 pb-8 flex flex-col justify-between z-0 will-change-transform [backface-visibility:hidden]">
+        {/* Falling tech icons — bottom-region overlay in front of the giant name.
+            Covers only the lower half (no links there) so icons stay draggable
+            while the top connect/follow/navigate links remain clickable. */}
+        <div className="absolute bottom-0 inset-x-0 h-1/2 z-20">
+          <FallingIcons
+            icons={TECH_ICON_SRCS}
+            trigger="manual"
+            active={iconsActive}
+            gravity={0.5}
+            iconSize={52}
+          />
+        </div>
+
         {/* Top */}
         <div className="w-full max-w-[1800px] mx-auto flex flex-col lg:flex-row justify-between gap-16">
           <div className="flex flex-col w-full lg:w-1/2">
